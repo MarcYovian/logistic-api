@@ -1,27 +1,35 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\ApiAuthMiddleware;
 use App\Http\Controllers\API\AdminController;
 use App\Http\Controllers\API\AssetController;
+use App\Http\Controllers\BorrowingDateController;
 
-// Route::get('/user', function (Request $request) {
-//     return $request->user();
-// })->middleware('auth:sanctum');
+Route::prefix('v1')->group(function () {
 
-Route::get('/admins', function () {
-    return "testing";
-});
-Route::post('/admins', [AdminController::class, 'register']);
-Route::post('/admins/login', [AdminController::class, 'login']);
+    // Admin Routes
+    Route::group(['prefix' => 'admins', 'as' => 'admin.'], function () {
+        Route::post('register', [AdminController::class, 'register'])->name('register');
+        Route::post('login', [AdminController::class, 'login'])->name('login');
 
-Route::middleware(ApiAuthMiddleware::class)->group(function () {
-    Route::get('/admins/current', [AdminController::class, 'show']);
+        Route::middleware(ApiAuthMiddleware::class)->group(function () {
+            Route::get('current', [AdminController::class, 'show'])->name('current');
+            Route::delete('logout', [AdminController::class, 'logout'])->name('logout');
+        });
+    });
 
-    Route::get('/assets', [AssetController::class, 'index']);
-    Route::post('/assets', [AssetController::class, 'store']);
-    Route::get('/assets/{id}', [AssetController::class, 'show'])->where('id', '[0-9]+');
-    Route::put('/assets/{id}', [AssetController::class, 'update'])->where('id', '[0-9]+');
-    Route::delete('/assets/{id}', [AssetController::class, 'destroy'])->where('id', '[0-9]+');
+    // Asset Routes
+    Route::group(['prefix' => 'assets', 'as' => 'asset.', 'middleware' => ApiAuthMiddleware::class], function () {
+        Route::get('/', [AssetController::class, 'index'])->name('index');
+        Route::post('/', [AssetController::class, 'store'])->name('store');
+        Route::get('{id}', [AssetController::class, 'show'])->where('id', '[0-9]+')->name('show');
+        Route::put('{id}', [AssetController::class, 'update'])->where('id', '[0-9]+')->name('update');
+        Route::delete('{id}', [AssetController::class, 'destroy'])->where('id', '[0-9]+')->name('delete');
+
+        // Borrowing Date
+        Route::prefix('{id}')->name('borrowingDate.')->group(function () {
+            Route::get('borrowing-date', [BorrowingDateController::class, 'index'])->name('index');
+        });
+    });
 });

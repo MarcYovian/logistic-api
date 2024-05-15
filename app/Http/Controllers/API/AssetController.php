@@ -35,7 +35,7 @@ class AssetController extends Controller
     {
         // dd($request);
         $data = $request->validated();
-        $admin = Auth::user();
+        $admin = Auth::guard('admin')->user();
 
         $asset = new Asset($data);
         $asset->admin_id = $admin->id;
@@ -50,8 +50,8 @@ class AssetController extends Controller
     public function show(int $id): AssetResource
     {
         // dd($id);
-        $admin = Auth::user();
-
+        $admin = Auth::guard('admin')->user();
+        // dd($admin);
         $asset = Asset::where('id', $id)->where('admin_id', $admin->id)->first();
 
         if (!$asset) {
@@ -74,7 +74,7 @@ class AssetController extends Controller
      */
     public function update(AssetUpdateRequest $request, int $id): AssetResource
     {
-        $admin = Auth::user();
+        $admin = Auth::guard('admin')->user();
 
         $asset = Asset::where('id', $id)->where('admin_id', $admin->id)->first();
 
@@ -103,7 +103,7 @@ class AssetController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        $admin = Auth::user();
+        $admin = Auth::guard('admin')->user();
 
         $asset = Asset::where('id', $id)->where('admin_id', $admin->id)->first();
         if (!$asset) {

@@ -4,35 +4,39 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Asset extends Model
+class Borrowing extends Model
 {
     use HasFactory;
+
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'assets';
+    protected $table = 'borrowings';
+
     /**
      * The primary key associated with the table.
      *
      * @var string
      */
     protected $primaryKey = 'id';
-    /**
-     * The "type" of the auto-incrementing ID.
-     *
-     * @var string
-     */
-    protected $keyType = 'int';
+
     /**
      * Indicates if the model should be timestamped.
      *
      * @var bool
      */
     public $timestamps = true;
+
+    /**
+     * The "type" of the auto-incrementing ID.
+     *
+     * @var string
+     */
+    protected $keyType = 'int';
+
     /**
      * Indicates if the IDs are auto-incrementing.
      *
@@ -46,24 +50,21 @@ class Asset extends Model
      * @var array
      */
     protected $fillable = [
-        'name',
-        'type',
-        'description',
-        'image_Path'
+        'ukm_name',
+        'event_name',
+        'num_of_participants',
+        'start_date',
+        'end_date',
+        'student_id',
     ];
 
-    public function admin()
+    public function Student()
     {
-        return $this->belongsTo(Admin::class);
+        return $this->belongsTo(Student::class);
     }
 
-    public function borrowingDates(): HasMany
+    public function DetailBorrowings()
     {
-        return $this->hasMany(BorrowingDate::class);
-    }
-
-    public function detailBorrowing(): HasMany
-    {
-        return $this->hasMany(BorrowingDate::class);
+        return $this->hasMany(DetailBorrowing::class);
     }
 }

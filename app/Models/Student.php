@@ -2,37 +2,28 @@
 
 namespace App\Models;
 
+use App\Enums\Major;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Asset extends Model
+class Student extends Model
 {
     use HasFactory;
+
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'assets';
+    protected $table = 'students';
+
     /**
      * The primary key associated with the table.
      *
      * @var string
      */
     protected $primaryKey = 'id';
-    /**
-     * The "type" of the auto-incrementing ID.
-     *
-     * @var string
-     */
-    protected $keyType = 'int';
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = true;
+
     /**
      * Indicates if the IDs are auto-incrementing.
      *
@@ -41,29 +32,44 @@ class Asset extends Model
     public $incrementing = true;
 
     /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = true;
+
+    /**
+     * The "type" of the auto-incrementing ID.
+     *
+     * @var string
+     */
+    protected $keyType = 'int';
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
         'name',
-        'type',
-        'description',
-        'image_Path'
+        'nim',
+        'major',
+        'email',
+        'username',
+        'password',
     ];
 
-    public function admin()
-    {
-        return $this->belongsTo(Admin::class);
-    }
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'major' => Major::class,
+    ];
 
-    public function borrowingDates(): HasMany
+    public function Borrowings()
     {
-        return $this->hasMany(BorrowingDate::class);
-    }
-
-    public function detailBorrowing(): HasMany
-    {
-        return $this->hasMany(BorrowingDate::class);
+        return $this->hasMany(Borrowing::class);
     }
 }

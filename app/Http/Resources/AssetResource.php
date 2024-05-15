@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\BorrowingDate;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -21,7 +22,8 @@ class AssetResource extends JsonResource
             'name' => $this->name,
             'type' => $this->type,
             'description' => $this->description,
-            'image_Path' => $this->image_Path
+            'image_Path' => $this->image_Path,
+            'borrowing_dates' => $this->borrowingDates->setVisible(['start_date', 'end_date']),
         ];
     }
 

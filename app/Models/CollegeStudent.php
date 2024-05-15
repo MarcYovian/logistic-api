@@ -2,15 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-// use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Auth\User as Model;
+use Illuminate\Database\Eloquent\Model;
 
-class Admin extends Model implements Authenticatable
+class CollegeStudent extends Model
 {
     use HasFactory;
-    protected $table = 'admins';
+
+    protected $table = 'college_students';
     protected $primaryKey = 'id';
     protected $keyType = 'int';
     public $timestamps = true;
@@ -23,20 +22,13 @@ class Admin extends Model implements Authenticatable
      */
     protected $fillable = [
         'name',
+        'nim',
+        'major',
         'email',
         'username',
         'password',
-        'role',
     ];
 
-    public function assets()
-    {
-        return $this->hasMany(Asset::class);
-    }
-    public function detailBorrowings()
-    {
-        return $this->hasMany(DetailBorrowing::class);
-    }
     /**
      * Get the unique identifier for the user.
      */
@@ -78,7 +70,7 @@ class Admin extends Model implements Authenticatable
      */
     public function getRememberToken()
     {
-        return $this->token;
+        return $this->remember_token;
     }
 
     /**
@@ -87,7 +79,7 @@ class Admin extends Model implements Authenticatable
      */
     public function getRememberTokenName()
     {
-        return 'token';
+        return 'remember_token';
     }
 
     /**
@@ -98,6 +90,6 @@ class Admin extends Model implements Authenticatable
      */
     public function setRememberToken($value)
     {
-        $this->token = $value;
+        $this->remember_token = $value;
     }
 }

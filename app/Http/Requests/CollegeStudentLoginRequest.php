@@ -2,12 +2,11 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class AdminLoginRequest extends FormRequest
+class CollegeStudentLoginRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,8 +24,8 @@ class AdminLoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "username" => ['required', 'max:100'],
-            "password" => ['required', 'max:100'],
+            'username' => ['required', 'max:100'],
+            'password' => ['required', 'max:100'],
         ];
     }
 

@@ -2,13 +2,14 @@
 
 namespace Database\Factories;
 
-use Illuminate\Support\Facades\Hash;
+use App\Enums\Major;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Hash;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Admin>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Student>
  */
-class AdminFactory extends Factory
+class StudentFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -19,10 +20,11 @@ class AdminFactory extends Factory
     {
         return [
             'name' => fake()->name(),
+            'nim' => rand(1000000000, 1202249999),
+            'major' => fake()->randomElement(Major::values()),
             'email' => fake()->email(),
             'username' => fake()->userName(),
             'password' => Hash::make('password'),
-            'role' => fake()->randomElement(['logistic', 'ssc']),
         ];
     }
 }

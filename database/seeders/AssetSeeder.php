@@ -23,6 +23,6 @@ class AssetSeeder extends Seeder
         //     'admin_id' => $admin->id
         // ]);
 
-        Asset::factory(10)->create();
+        Asset::factory(50)->create();
     }
 }

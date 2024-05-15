@@ -19,7 +19,6 @@ class AdminController extends Controller
     public function register(AdminRegisterRequest $request): JsonResponse
     {
         $data = $request->validated();
-        // dd($data);
 
         if (Admin::where('username', $data['username'])->count() == 1) {
             throw new HttpResponseException(response([
@@ -42,8 +41,7 @@ class AdminController extends Controller
     {
         $data = $request->validated();
 
-        $admin = Admin::where('username', $data['username'])->first();
-        if (!$admin || !Hash::check($data['password'], $admin->password)) {
+        if (!Auth::guard('admin')->attempt($data)) {
             throw new HttpResponseException(response([
                 "errors" => [
                     "message" => [
@@ -53,6 +51,8 @@ class AdminController extends Controller
             ], 401));
         }
 
+        /** @var \App\Models\Admin $admin **/
+        $admin = Auth::guard('admin')->user();
         $admin->token = Str::uuid()->toString();
         $admin->save();
 
@@ -61,8 +61,21 @@ class AdminController extends Controller
 
     public function show(Request $request): AdminResource
     {
-        $admin = Auth::user();
+        $admin = Auth::guard('admin')->user();
 
         return new AdminResource($admin);
+    }
+
+    public function logout(Request $request): JsonResponse
+    {
+        // dd(Auth::guard('admin')->user());
+        /** @var \app\Models\Admin $admin **/
+        $admin = Auth::guard('admin')->user();
+        $admin->token = null;
+        $admin->save();
+
+        return response()->json([
+            'data' => true,
+        ])->setStatusCode(200);
     }
 }

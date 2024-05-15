@@ -17,11 +17,11 @@ class AssetFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->name(),
-            'type' => $this->faker->word(),
-            'description' => $this->faker->paragraph(mt_rand(5, 10)),
-            'image_Path' => $this->faker->imageUrl(640, 480, 'assets', true),
-            'admin_id' => 1
+            'name' => fake()->word(),
+            'type' => fake()->word(),
+            'description' => fake()->paragraph(mt_rand(5, 10)),
+            'image_Path' => fake()->imageUrl(640, 480, 'assets', true),
+            'admin_id' => rand(1, 4)
         ];
     }
 }

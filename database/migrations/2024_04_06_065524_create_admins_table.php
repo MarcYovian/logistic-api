@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('email')->nullable(false)->unique('admin_email_unique');
             $table->string('username', 100)->nullable(false)->unique('admin_username_unique');
             $table->string('password', 100)->nullable(false);
-            $table->enum('role', ['logistik', 'ssc']);
+            $table->enum('role', ['logistic', 'ssc']);
             $table->string('token', 100)->nullable()->unique('admin_token_unique');
             $table->timestamps();
         });
