@@ -20,7 +20,9 @@ class AssetFactory extends Factory
             'name' => fake()->word(),
             'type' => fake()->word(),
             'description' => fake()->paragraph(mt_rand(5, 10)),
-            'image_Path' => fake()->imageUrl(640, 480, 'assets', true),
+            'original_image' => fake()->imageUrl(640, 480, 'assets', true),
+            'encrypted_image' => fake()->imageUrl(640, 480, 'assets', true),
+            'url_image' => fake()->imageUrl(640, 480, 'assets', true),
             'admin_id' => rand(1, 4)
         ];
     }

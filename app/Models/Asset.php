@@ -49,7 +49,9 @@ class Asset extends Model
         'name',
         'type',
         'description',
-        'image_Path'
+        'original_image',
+        'encrypted_image',
+        'url_image',
     ];
 
     public function admin()

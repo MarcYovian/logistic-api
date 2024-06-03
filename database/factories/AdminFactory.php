@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\AdminType;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -22,7 +23,7 @@ class AdminFactory extends Factory
             'email' => fake()->email(),
             'username' => fake()->userName(),
             'password' => Hash::make('password'),
-            'role' => fake()->randomElement(['logistic', 'ssc']),
+            'type' => fake()->randomElement(AdminType::values()),
         ];
     }
 }

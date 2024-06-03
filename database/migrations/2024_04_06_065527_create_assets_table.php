@@ -16,7 +16,9 @@ return new class extends Migration
             $table->string('name', 100)->nullable(false);
             $table->string('type', 100)->nullable(false);
             $table->longText('description')->nullable();
-            $table->string('image_Path')->nullable();
+            $table->string('original_image')->nullable();
+            $table->string('encrypted_image')->nullable();
+            $table->string('url_image')->nullable();
             $table->unsignedBigInteger('admin_id')->nullable(false);
             $table->timestamps();
 

@@ -16,49 +16,6 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 
 class AdminController extends Controller
 {
-    public function register(AdminRegisterRequest $request): JsonResponse
-    {
-        $data = $request->validated();
-
-        if (Admin::where('username', $data['username'])->count() == 1) {
-            throw new HttpResponseException(response([
-                "errors" => [
-                    "username" => [
-                        "username already registered"
-                    ]
-                ]
-            ], 400));
-        }
-
-        $user = new Admin($data);
-        $user->password = Hash::make($data['password']);
-        $user->save();
-
-        return (new AdminResource($user))->response()->setStatusCode(201);
-    }
-
-    public function login(AdminLoginRequest $request): AdminResource
-    {
-        $data = $request->validated();
-
-        if (!Auth::guard('admin')->attempt($data)) {
-            throw new HttpResponseException(response([
-                "errors" => [
-                    "message" => [
-                        "username or password wrong"
-                    ]
-                ]
-            ], 401));
-        }
-
-        /** @var \App\Models\Admin $admin **/
-        $admin = Auth::guard('admin')->user();
-        $admin->token = Str::uuid()->toString();
-        $admin->save();
-
-        return new AdminResource($admin);
-    }
-
     public function show(Request $request): AdminResource
     {
         $admin = Auth::guard('admin')->user();

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\AdminType;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
@@ -26,10 +27,10 @@ class AdminRegisterRequest extends FormRequest
     {
         return [
             'name' => ['required', 'max:100'],
-            'email' => ['required', 'email'],
+            'email' => ['required', 'email', 'unique:admins'],
             'username' => ['required', 'max:100'],
             'password' => ['required', 'max:100'],
-            'role' => [Rule::in(['logistik', 'ssc'])],
+            'role' => AdminType::values(),
         ];
     }
 

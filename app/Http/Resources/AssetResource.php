@@ -22,8 +22,11 @@ class AssetResource extends JsonResource
             'name' => $this->name,
             'type' => $this->type,
             'description' => $this->description,
-            'image_Path' => $this->image_Path,
-            'borrowing_dates' => $this->borrowingDates->setVisible(['start_date', 'end_date']),
+            'original_image' => $this->original_image,
+            'encrypted_image' => $this->encrypted_image,
+            'url_image' => $this->url_image,
+            'borrowing_dates' => $this->whenNotNull($this->borrowingDates->setVisible(['start_date', 'end_date'])),
+            'admin' => $this->admin
         ];
     }
 

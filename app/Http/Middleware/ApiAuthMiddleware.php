@@ -18,7 +18,7 @@ class ApiAuthMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $token = $request->header('Authorization');
+        $token = $request->bearerToken();
         $authenticate = true;
         if (!$token) {
             $authenticate = false;
@@ -31,6 +31,7 @@ class ApiAuthMiddleware
         } else {
             if ($admin) {
                 Auth::guard('admin')->login($admin);
+                // dd(Auth::guard('admin')->user());
             } else {
                 Auth::guard('collegeStudent')->login($collegeStudent);
             }

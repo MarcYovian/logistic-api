@@ -4,18 +4,24 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\ApiAuthMiddleware;
 use App\Http\Controllers\API\AdminController;
 use App\Http\Controllers\API\AssetController;
+use App\Http\Controllers\API\LoginAdminController;
+use App\Http\Controllers\API\RegisterController;
 use App\Http\Controllers\BorrowingDateController;
+use Illuminate\Auth\Events\Registered;
 
 Route::prefix('v1')->group(function () {
 
     // Admin Routes
     Route::group(['prefix' => 'admins', 'as' => 'admin.'], function () {
-        Route::post('register', [AdminController::class, 'register'])->name('register');
-        Route::post('login', [AdminController::class, 'login'])->name('login');
+        Route::post('register', RegisterController::class)->name('register');
+        Route::post('login', LoginAdminController::class)->name('login');
 
         Route::middleware(ApiAuthMiddleware::class)->group(function () {
             Route::get('current', [AdminController::class, 'show'])->name('current');
             Route::delete('logout', [AdminController::class, 'logout'])->name('logout');
+        });
+        Route::get('/user', function () {
+            return auth()->guard('admin')->user();
         });
     });
 

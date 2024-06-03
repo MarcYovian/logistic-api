@@ -21,7 +21,7 @@ class AdminResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'username' => $this->username,
-            'role' => $this->role,
+            'type' => $this->type,
             'token' => $this->whenNotNull($this->token)
         ];
     }

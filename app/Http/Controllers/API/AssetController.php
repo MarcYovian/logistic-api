@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\AssetCreateRequest;
 use App\Http\Requests\AssetUpdateRequest;
 use App\Http\Resources\AssetResource;
+use Illuminate\Support\Facades\Storage;
 
 class AssetController extends Controller
 {
@@ -33,12 +34,27 @@ class AssetController extends Controller
      */
     public function store(AssetCreateRequest $request): JsonResponse
     {
-        // dd($request);
+        // dd(Auth::guard('admin')->user());
         $data = $request->validated();
-        $admin = Auth::guard('admin')->user();
+        $image = $request->file('image');
+        if ($image) {
+            $originalImage = $image->getClientOriginalName();
+            $encryptedImage = $image->hashName();
 
+            $image->store('public/assets-image');
+            $url = Storage::url('public/assets-image/' . $encryptedImage);
+            $urlImage = url($url);
+        }
+        $admin = Auth::guard('admin')->user();
+        // dd($admin);
         $asset = new Asset($data);
         $asset->admin_id = $admin->id;
+        if ($image) {
+            $asset->original_image = $originalImage;
+            $asset->encrypted_image = $encryptedImage;
+            $asset->url_image = $urlImage;
+        }
+
         $asset->save();
 
         return (new AssetResource($asset))->response()->setStatusCode(201);
@@ -52,7 +68,7 @@ class AssetController extends Controller
         // dd($id);
         $admin = Auth::guard('admin')->user();
         // dd($admin);
-        $asset = Asset::where('id', $id)->where('admin_id', $admin->id)->first();
+        $asset = Asset::where('id', $id)->first();
 
         if (!$asset) {
             throw new HttpResponseException(
@@ -74,8 +90,8 @@ class AssetController extends Controller
      */
     public function update(AssetUpdateRequest $request, int $id): AssetResource
     {
+        $data = $request->validated();
         $admin = Auth::guard('admin')->user();
-
         $asset = Asset::where('id', $id)->where('admin_id', $admin->id)->first();
 
         if (!$asset) {
@@ -90,10 +106,25 @@ class AssetController extends Controller
             );
         }
 
-        $data = $request->validated();
+        $image = $request->file('image');
+        if ($image) {
+            if ($asset->encrypted_image) {
+                Storage::delete('public/assets-image/' . $asset->encrypted_image);
+            }
+
+            $originalImage = $image->getClientOriginalName();
+            $encryptedImage = $image->hashName();
+            $image->store('public/assets-image');
+            $url = Storage::url('public/assets-image/' . $encryptedImage);
+            $urlImage = url($url);
+
+            $asset->original_image = $originalImage;
+            $asset->encrypted_image = $encryptedImage;
+            $asset->url_image = $urlImage;
+        }
+
         $asset->fill($data);
         $asset->save();
-        // dd($asset);
 
         return new AssetResource($asset);
     }

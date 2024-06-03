@@ -13,7 +13,7 @@ class AssetCreateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user() != null;
+        return $this->user('admin') != null;
     }
 
     /**
@@ -27,7 +27,7 @@ class AssetCreateRequest extends FormRequest
             'name' => ['required', 'max:100'],
             'type' => ['required', 'max:100'],
             'description' => ['nullable'],
-            'image_Path' => ['nullable']
+            'image' => ['required', 'mimes:png,jpg,jpeg', 'max:3072'],
         ];
     }
 

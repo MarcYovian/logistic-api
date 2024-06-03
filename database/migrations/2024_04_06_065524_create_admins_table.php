@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\AdminType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,7 +18,7 @@ return new class extends Migration
             $table->string('email')->nullable(false)->unique('admin_email_unique');
             $table->string('username', 100)->nullable(false)->unique('admin_username_unique');
             $table->string('password', 100)->nullable(false);
-            $table->enum('role', ['logistic', 'ssc']);
+            $table->enum('type', AdminType::values());
             $table->string('token', 100)->nullable()->unique('admin_token_unique');
             $table->timestamps();
         });

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\AdminType;
 use App\Models\Admin;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -19,7 +20,7 @@ class AdminSeeder extends Seeder
             'email' => 'marcell@gmail.com',
             'username' => 'marcell',
             'password' => Hash::make('password'),
-            'role' => 'logistic',
+            'type' => AdminType::LOGISTIK->value,
             'token' => 'marcell'
         ]);
 
