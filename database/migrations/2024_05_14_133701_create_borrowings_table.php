@@ -17,8 +17,7 @@ return new class extends Migration
             $table->string('ukm_name', 100)->nullable(false);
             $table->string('event_name', 200)->nullable(false);
             $table->integer('num_of_participants')->nullable();
-            $table->timestamp('start_date')->nullable();
-            $table->timestamp('end_date')->nullable();
+            $table->timestamp('event_date')->nullable();
 
             $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
             $table->timestamps();

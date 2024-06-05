@@ -24,7 +24,7 @@ class AssetController extends Controller
         $page = $request->input("page", 1);
         $size = $request->input("size", 10);
 
-        $assets = Asset::query()->paginate(perPage: $size, page: $page);
+        $assets = Asset::query()->orderByDesc('updated_at')->paginate(perPage: $size, page: $page);
 
         return new AssetCollection($assets);
     }

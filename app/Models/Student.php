@@ -5,10 +5,11 @@ namespace App\Models;
 use App\Enums\Major;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Sanctum\HasApiTokens;
 
 class Student extends Model
 {
-    use HasFactory;
+    use HasFactory, HasApiTokens;
 
     /**
      * The table associated with the model.
@@ -66,6 +67,16 @@ class Student extends Model
      */
     protected $casts = [
         'major' => Major::class,
+    ];
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'password',
+        'token',
     ];
 
     public function Borrowings()

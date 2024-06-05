@@ -53,8 +53,7 @@ class Borrowing extends Model
         'ukm_name',
         'event_name',
         'num_of_participants',
-        'start_date',
-        'end_date',
+        'event_date',
         'student_id',
     ];
 

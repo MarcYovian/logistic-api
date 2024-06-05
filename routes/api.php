@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\ApiAuthMiddleware;
 use App\Http\Controllers\API\AdminController;
 use App\Http\Controllers\API\AssetController;
+use App\Http\Controllers\API\BorrowingController;
 use App\Http\Controllers\API\LoginAdminController;
 use App\Http\Controllers\API\RegisterController;
 use App\Http\Controllers\BorrowingDateController;
@@ -38,4 +39,11 @@ Route::prefix('v1')->group(function () {
             Route::get('borrowing-date', [BorrowingDateController::class, 'index'])->name('index');
         });
     });
+
+    // Borrowings Routes
+    Route::group(['prefix' => 'borrowings', 'as' => 'borrowings.', 'middleware' => ApiAuthMiddleware::class], function () {
+        Route::get('/', [BorrowingController::class, 'index'])->name('index');
+        Route::post('/', [BorrowingController::class, 'store'])->name('store');
+    });
+    // Route::get('borrowings', [BorrowingController::class, 'index']);
 });

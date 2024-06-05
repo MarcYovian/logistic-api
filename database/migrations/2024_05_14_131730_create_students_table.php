@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('email', 100)->nullable(false)->unique('student_email_unique');
             $table->string('username', 100)->nullable(false)->unique('student_username_unique');
             $table->string('password', 100)->nullable(false);
+            $table->string('token', 100)->nullable()->unique('student_token_unique');
             $table->timestamps();
         });
     }

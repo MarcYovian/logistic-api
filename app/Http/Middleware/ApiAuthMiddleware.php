@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use App\Models\Admin;
 use App\Models\CollegeStudent;
+use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,7 +26,7 @@ class ApiAuthMiddleware
         }
 
         $admin = Admin::where('token', $token)->first();
-        $collegeStudent = CollegeStudent::where('remember_token', $token)->first();
+        $collegeStudent = Student::where('token', $token)->first();
         if (!$admin && !$collegeStudent) {
             $authenticate = false;
         } else {
@@ -33,7 +34,8 @@ class ApiAuthMiddleware
                 Auth::guard('admin')->login($admin);
                 // dd(Auth::guard('admin')->user());
             } else {
-                Auth::guard('collegeStudent')->login($collegeStudent);
+                // dd("hello");
+                Auth::guard('student')->login($collegeStudent);
             }
         }
         if ($authenticate) {

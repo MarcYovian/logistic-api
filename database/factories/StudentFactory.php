@@ -25,6 +25,7 @@ class StudentFactory extends Factory
             'email' => fake()->email(),
             'username' => fake()->userName(),
             'password' => Hash::make('password'),
+            'token' => null
         ];
     }
 }

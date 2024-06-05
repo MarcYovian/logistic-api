@@ -20,8 +20,7 @@ class BorrowingFactory extends Factory
             'ukm_name' => fake()->company(),
             'event_name' => fake()->bs(),
             'num_of_participants' => rand(1, 50),
-            'start_date' => fake()->dateTimeBetween('now', '+1 months'),
-            'end_date' => fake()->dateTimeBetween('+1 months', '+2 months'),
+            'event_date' => fake()->dateTimeBetween('now', '+2 months'),
             'student_id' => rand(1, 50),
         ];
     }

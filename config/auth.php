@@ -44,9 +44,9 @@ return [
             'driver' => 'session',
             'provider' => 'admin',
         ],
-        'collageStudent' => [
+        'student' => [
             'driver' => 'session',
-            'provider' => 'collageStudent',
+            'provider' => 'student',
         ],
         'api' => [
             'driver' => 'jwt',
