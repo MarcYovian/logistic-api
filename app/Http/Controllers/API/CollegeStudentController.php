@@ -14,7 +14,7 @@ class CollegeStudentController extends Controller
     {
         $data = $request->validated();
 
-        if (!Auth::guard('collageStudent')->attempt($data)) {
+        if (!Auth::guard('student')->attempt($data)) {
             throw new HttpResponseException(response([
                 "errors" => [
                     "message" => [
@@ -24,7 +24,7 @@ class CollegeStudentController extends Controller
             ], 401));
         }
 
-        /** @var \App\Models\CollegeStudent $collegeStudent **/
-        dd(Auth::guard('collegeStudent')->user()->setRememberToken(Str::uuid()->toString()));
+        /** @var \App\Models\Student $collegeStudent **/
+        dd(Auth::guard('Student')->user()->setRememberToken(Str::uuid()->toString()));
     }
 }

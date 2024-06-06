@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\DetailBorrowing;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
@@ -32,12 +33,38 @@ class StoreBorrowingRequest extends FormRequest
             'num_of_participants' => 'nullable|integer',
             'event_date' => 'nullable|date',
             'assets' => 'required|array',
-            'assets.*.asset_id' => 'required|exists:assets,id',
             'assets.*.admin_id' => 'nullable|exists:admins,id',
             'assets.*.start_date' => 'required|date',
             'assets.*.end_date' => 'required|date|after_or_equal:assets.*.start_date',
+            'assets.*.asset_id' => [
+                'required',
+                'exists:assets,id',
+            ],
             'assets.*.description' => 'nullable|string',
             'assets.*.num' => 'required|integer|min:1',
+
+            // Aturan validasi kustom untuk memeriksa tumpang tindih peminjaman asset
+            'assets.*' => function ($attribute, $value, $fail) {
+                $assetId = $value['asset_id'];
+                $startDate = $value['start_date'];
+                $endDate = $value['end_date'];
+
+                // Periksa apakah ada peminjaman untuk asset yang sama dalam rentang waktu yang diberikan
+                $existingBorrowings = DetailBorrowing::where('asset_id', $assetId)
+                    ->where(function ($query) use ($startDate, $endDate) {
+                        $query->whereBetween('start_date', [$startDate, $endDate])
+                            ->orWhereBetween('end_date', [$startDate, $endDate])
+                            ->orWhere(function ($query) use ($startDate, $endDate) {
+                                $query->where('start_date', '<', $startDate)
+                                    ->where('end_date', '>', $endDate);
+                            });
+                    })
+                    ->exists();
+
+                if ($existingBorrowings) {
+                    $fail('The asset is already borrowed within the specified time range.');
+                }
+            },
         ];
     }
 

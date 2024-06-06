@@ -26,16 +26,14 @@ class ApiAuthMiddleware
         }
 
         $admin = Admin::where('token', $token)->first();
-        $collegeStudent = Student::where('token', $token)->first();
-        if (!$admin && !$collegeStudent) {
+        $student = Student::where('token', $token)->first();
+        if (!$admin && !$student) {
             $authenticate = false;
         } else {
             if ($admin) {
                 Auth::guard('admin')->login($admin);
-                // dd(Auth::guard('admin')->user());
             } else {
-                // dd("hello");
-                Auth::guard('student')->login($collegeStudent);
+                Auth::guard('student')->login($student);
             }
         }
         if ($authenticate) {

@@ -81,9 +81,9 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\Admin::class,
         ],
-        'collageStudent' => [
+        'student' => [
             'driver' => 'eloquent',
-            'model' => App\Models\CollegeStudent::class,
+            'model' => App\Models\Student::class,
         ]
 
 

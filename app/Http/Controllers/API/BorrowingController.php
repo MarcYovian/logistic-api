@@ -9,8 +9,8 @@ use App\Http\Resources\BorrowingColection;
 use App\Http\Resources\BorrowingResource;
 use App\Models\Borrowing;
 use App\Models\DetailBorrowing;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class BorrowingController extends Controller
 {
@@ -57,9 +57,6 @@ class BorrowingController extends Controller
             'message' => 'Borrowing created successfully',
             'borrowing' => $borrowing->load('detailBorrowings')
         ], 201);
-        // dd("hello");
-
-        // dd($data);
     }
 
     /**
@@ -67,7 +64,21 @@ class BorrowingController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $borrowing = Borrowing::find($id);
+
+        if (!$borrowing) {
+            throw new HttpResponseException(
+                response()->json([
+                    'errors' => [
+                        'message' => [
+                            'not found'
+                        ],
+                    ]
+                ])
+            );
+        }
+
+        return new BorrowingResource($borrowing);
     }
 
     /**
