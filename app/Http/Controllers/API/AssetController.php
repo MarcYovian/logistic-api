@@ -154,4 +154,10 @@ class AssetController extends Controller
             'data' => true
         ])->setStatusCode(200);
     }
+
+    public function allAsset()
+    {
+        $assets = Asset::query()->orderByDesc('updated_at')->get();
+        return new AssetCollection($assets);
+    }
 }
