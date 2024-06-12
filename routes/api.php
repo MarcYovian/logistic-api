@@ -21,7 +21,7 @@ Route::prefix('v1')->group(function () {
         Route::middleware(['auth'])->group(function () {
             Route::get('users', [AdminController::class, 'index'])->name('users');
             Route::put('users/{id}', [AdminController::class, 'update'])->name('users.update');
-
+            Route::put('users/{id}/is-active', [AdminController::class, 'updateIsActive'])->middleware('role:superuser')->name('users.updateIsActive');
         });
 
         Route::middleware(['auth', 'role:logistik,ssc,superuser'])->group(function () {

@@ -26,9 +26,11 @@ class ApiAuthMiddleware
         }
 
         $admin = Admin::where('token', $token)->where('is_active', true)->first();
-        // dd($admin);
         $student = Student::where('token', $token)->first();
+        // dd($student);
+        // dd($admin);
         if (!$admin && !$student) {
+
             $authenticate = false;
         } else {
             if ($admin) {

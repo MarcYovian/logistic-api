@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Enums\AdminType;
 use App\Models\Admin;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -12,7 +13,9 @@ use Illuminate\Support\Facades\Hash;
 use App\Http\Resources\AdminResource;
 use App\Http\Requests\AdminLoginRequest;
 use App\Http\Requests\AdminRegisterRequest;
+use App\Http\Requests\UpdateIsActiveAdminRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Symfony\Component\HttpFoundation\Response;
 
 class AdminController extends Controller
 {
@@ -21,10 +24,10 @@ class AdminController extends Controller
     {
         $page = $request->input("page", 1);
         $size = $request->input("size", 10);
+        $loggedInAdminId = Auth::guard('admin')->user()->id;
+        $admins = Admin::query()->where('id', '!=', $loggedInAdminId)->orderByDesc('updated_at')->paginate(perPage: $size, page: $page);
 
-        $assets = Admin::query()->orderByDesc('updated_at')->paginate(perPage: $size, page: $page);
-
-        return AdminResource::collection($assets);
+        return AdminResource::collection($admins);
     }
 
     public function update(Request $request, $id)
@@ -39,6 +42,31 @@ class AdminController extends Controller
         return response()->json([
             'data' => true,
         ])->setStatusCode(200);
+    }
+
+    public function updateIsActive(UpdateIsActiveAdminRequest $request, $id)
+    {
+        $data = $request->validated();
+        // Mendapatkan admin yang sedang login
+        $loggedInAdmin = Auth::guard('admin')->user();
+
+        // Memastikan hanya superuser yang dapat melakukan perubahan
+        if ($loggedInAdmin->type !== AdminType::SUPERUSER->value) {
+            return response()->json([
+                'errors' => [
+                    'message' => ['You do not have permission to perform this action.']
+                ]
+            ], Response::HTTP_FORBIDDEN);
+        }
+        // Mendapatkan admin yang akan diperbarui
+        $admin = Admin::findOrFail($id);
+        $admin->is_active = $data['is_active'];
+        $admin->save();
+
+        return response()->json([
+            'message' => 'Admin status updated successfully.',
+            'admin' => $admin
+        ]);
     }
     public function show(Request $request): AdminResource
     {
