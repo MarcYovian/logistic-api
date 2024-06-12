@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Enums\StatusBorrowing;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ApproveRequest;
 use App\Http\Requests\StoreBorrowingRequest;
 use App\Http\Resources\BorrowingColection;
 use App\Http\Resources\BorrowingResource;
@@ -11,6 +12,7 @@ use App\Models\Borrowing;
 use App\Models\DetailBorrowing;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BorrowingController extends Controller
 {
@@ -44,7 +46,7 @@ class BorrowingController extends Controller
             DetailBorrowing::create([
                 'borrowing_id' => $borrowing->id,
                 'asset_id' => $asset['asset_id'],
-                'admin_id' => $asset['admin_id'],
+                'admin_id' => $asset['admin_id'] ?? null,
                 'start_date' => $asset['start_date'],
                 'end_date' => $asset['end_date'],
                 'description' => $asset['description'],
@@ -53,10 +55,7 @@ class BorrowingController extends Controller
             ]);
         }
 
-        return response()->json([
-            'message' => 'Borrowing created successfully',
-            'borrowing' => $borrowing->load('detailBorrowings')
-        ], 201);
+        return (new BorrowingResource($borrowing))->response()->setStatusCode(201);
     }
 
     /**
@@ -86,9 +85,46 @@ class BorrowingController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
     }
 
+    public function approve(ApproveRequest $request, $id)
+    {
+        $validated = $request->validated();
+        // dd($validated);
+        $borrowing = Borrowing::findOrFail($id);
+
+        foreach ($validated['details'] as $detail) {
+            $detailBorrowing = DetailBorrowing::findOrFail($detail['id']);
+            $detailBorrowing->update([
+                'status' => $detail['status'],
+            ]);
+        }
+
+        $allApproved = $borrowing->detailBorrowings()->where('status', '!=', 'APPROVED')->count() === 0;
+
+        $adminId = Auth::guard('admin')->user()->id;
+        if ($allApproved) {
+            $borrowing->update([
+                'status' => 'APPROVED',
+                'approved_by' => $adminId,
+                'approved_at' => now(),
+            ]);
+        } else {
+            // Jika ada yang ditolak, ubah status peminjaman menjadi REJECTED
+            if ($borrowing->detailBorrowings()->where('status', 'REJECTED')->count() > 0) {
+                $borrowing->update([
+                    'status' => 'REJECTED',
+                    'approved_by' => $adminId,
+                    'approved_at' => now(),
+                ]);
+            }
+        }
+
+        return response()->json([
+            'message' => 'Borrowing details updated successfully',
+            'borrowing' => new BorrowingResource($borrowing),
+        ], 200);
+    }
     /**
      * Remove the specified resource from storage.
      */

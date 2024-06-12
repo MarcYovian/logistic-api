@@ -20,6 +20,9 @@ class BorrowingResource extends JsonResource
             'event_name' => $this->event_name,
             'num_of_participants' => $this->num_of_participants,
             'event_date' => $this->event_date,
+            'status' => $this->status,
+            'approved_by' => $this->approved_by,
+            'approved_at' => $this->approved_at,
             'student' => $this->Student,
             'detail_borrowings' => $this->DetailBorrowings
         ];
