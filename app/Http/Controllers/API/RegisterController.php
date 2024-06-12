@@ -32,7 +32,6 @@ class RegisterController extends Controller
 
         $user = new Admin($data);
         $user->password = Hash::make($data['password']);
-        $user->type = AdminType::WAITING->value;
         $user->save();
 
         return (new AdminResource($user))->response()->setStatusCode(201);

@@ -17,6 +17,8 @@ class LoginAdminController extends Controller
     public function __invoke(AdminLoginRequest $request)
     {
         $data = $request->validated();
+        $data['is_active'] = true;
+        // dd($data);
         if (!Auth()->guard('admin')->attempt($data)) {
             throw new HttpResponseException(response([
                 "errors" => [
