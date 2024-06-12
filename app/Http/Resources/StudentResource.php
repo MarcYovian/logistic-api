@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CollegeStudentResource extends JsonResource
+class StudentResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -21,8 +21,7 @@ class CollegeStudentResource extends JsonResource
             'major' => $this->major,
             'email' => $this->email,
             'username' => $this->username,
-            'password' => $this->password,
-            'remember_token' => $this->whenNotNull($this->remember_token)
+            'token' => $this->whenNotNull($this->token),
         ];
     }
 }

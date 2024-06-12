@@ -55,6 +55,9 @@ class Borrowing extends Model
         'num_of_participants',
         'event_date',
         'student_id',
+        'status',
+        'approved_by',
+        'approved_at',
     ];
 
     public function Student()

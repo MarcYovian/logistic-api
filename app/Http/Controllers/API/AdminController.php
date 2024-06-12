@@ -4,15 +4,11 @@ namespace App\Http\Controllers\API;
 
 use App\Enums\AdminType;
 use App\Models\Admin;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use App\Http\Resources\AdminResource;
-use App\Http\Requests\AdminLoginRequest;
-use App\Http\Requests\AdminRegisterRequest;
 use App\Http\Requests\UpdateIsActiveAdminRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Symfony\Component\HttpFoundation\Response;
@@ -73,6 +69,42 @@ class AdminController extends Controller
         $admin = Auth::guard('admin')->user();
 
         return new AdminResource($admin);
+    }
+
+    public function destroy($id)
+    {
+        $current = Auth::guard('admin')->user();
+
+        if ($current->type != AdminType::SUPERUSER->value) {
+            throw new HttpResponseException(
+                response()->json([
+                    'errors' => [
+                        "message" => [
+                            "forbidden"
+                        ]
+                    ]
+                ])->setStatusCode(403)
+            );
+        }
+
+        $admin = Admin::findOrFail($id);
+        if (!$admin) {
+            throw new HttpResponseException(
+                response()->json([
+                    'errors' => [
+                        "message" => [
+                            "not found"
+                        ]
+                    ]
+                ])->setStatusCode(404)
+            );
+        }
+        // dd($admin);
+
+        $admin->delete();
+        return response()->json([
+            'data' => true
+        ])->setStatusCode(200);
     }
 
     public function logout(Request $request): JsonResponse
