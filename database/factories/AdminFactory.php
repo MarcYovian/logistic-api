@@ -24,6 +24,7 @@ class AdminFactory extends Factory
             'username' => fake()->userName(),
             'password' => Hash::make('password'),
             'type' => fake()->randomElement(AdminType::values()),
+            'is_active' => false
         ];
     }
 }

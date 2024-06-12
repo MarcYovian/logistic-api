@@ -18,7 +18,8 @@ return new class extends Migration
             $table->string('email')->nullable(false)->unique('admin_email_unique');
             $table->string('username', 100)->nullable(false)->unique('admin_username_unique');
             $table->string('password', 100)->nullable(false);
-            $table->enum('type', AdminType::values()); // admin logistik and admin ssc
+            $table->enum('type', AdminType::values()); // logistik, ssc, superuser
+            $table->boolean('is_active')->default(false);
             $table->string('token', 100)->nullable()->unique('admin_token_unique');
             $table->timestamps();
         });
