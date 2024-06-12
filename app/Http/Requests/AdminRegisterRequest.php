@@ -30,7 +30,7 @@ class AdminRegisterRequest extends FormRequest
             'email' => ['required', 'email', 'unique:admins'],
             'username' => ['required', 'max:100'],
             'password' => ['required', 'max:100'],
-            'type' => AdminType::values(),
+            'type' => ['required', 'in:' . implode(',', AdminType::allowedValues())],
         ];
     }
 
