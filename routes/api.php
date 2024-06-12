@@ -53,11 +53,11 @@ Route::prefix('v1')->group(function () {
     // Asset Routes
     Route::group(['prefix' => 'assets', 'as' => 'asset.', 'middleware' => ['auth', 'role:logistik,ssc,student']], function () {
         Route::get('/', [AssetController::class, 'index'])->name('index');
-        ;
         Route::post('/', [AssetController::class, 'store'])->middleware('role:logistik')->name('store');
         Route::get('{id}', [AssetController::class, 'show'])->where('id', '[0-9]+')->name('show');
         Route::put('{id}', [AssetController::class, 'update'])->where('id', '[0-9]+')->middleware('role:logistik')->name('update');
         Route::delete('{id}', [AssetController::class, 'destroy'])->where('id', '[0-9]+')->middleware('role:logistik')->name('delete');
+        Route::get('all-asset', [AssetController::class, 'allAsset'])->name('allAsset');
     });
 
     // Borrowings Routes
