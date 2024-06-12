@@ -18,7 +18,13 @@ Route::prefix('v1')->group(function () {
         Route::post('register', RegisterController::class)->name('register');
         Route::post('login', LoginAdminController::class)->name('login');
 
-        Route::middleware(['auth', 'role:logistik,ssc'])->group(function () {
+        Route::middleware(['auth'])->group(function () {
+            Route::get('users', [AdminController::class, 'index'])->name('users');
+            Route::put('users/{id}', [AdminController::class, 'update'])->name('users.update');
+
+        });
+
+        Route::middleware(['auth', 'role:logistik,ssc,superuser'])->group(function () {
             Route::get('current', [AdminController::class, 'show'])->name('current');
             Route::delete('logout', [AdminController::class, 'logout'])->name('logout');
         });
