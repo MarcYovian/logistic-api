@@ -12,4 +12,12 @@ enum AdminType: string
     {
         return array_column(self::cases(), 'value');
     }
+
+    public static function allowedValues(): array
+    {
+        return [
+            self::LOGISTIK->value,
+            self::SSC->value,
+        ];
+    }
 }
