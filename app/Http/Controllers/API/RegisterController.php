@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Enums\AdminType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AdminRegisterRequest;
 use App\Http\Resources\AdminResource;
@@ -19,7 +20,6 @@ class RegisterController extends Controller
     public function __invoke(AdminRegisterRequest $request): JsonResponse
     {
         $data = $request->validated();
-
         if (Admin::where('username', $data['username'])->count() == 1) {
             throw new HttpResponseException(response([
                 "errors" => [
@@ -32,6 +32,7 @@ class RegisterController extends Controller
 
         $user = new Admin($data);
         $user->password = Hash::make($data['password']);
+        $user->type = AdminType::WAITING->value;
         $user->save();
 
         return (new AdminResource($user))->response()->setStatusCode(201);

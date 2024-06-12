@@ -16,6 +16,30 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 
 class AdminController extends Controller
 {
+
+    public function index(Request $request)
+    {
+        $page = $request->input("page", 1);
+        $size = $request->input("size", 10);
+
+        $assets = Admin::query()->orderByDesc('updated_at')->paginate(perPage: $size, page: $page);
+
+        return AdminResource::collection($assets);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $data = Admin::findOrFail($id);
+
+        if (isset($data)) {
+            $data->type = $request['type'];
+            $data->save();
+        }
+
+        return response()->json([
+            'data' => true,
+        ])->setStatusCode(200);
+    }
     public function show(Request $request): AdminResource
     {
         $admin = Auth::guard('admin')->user();

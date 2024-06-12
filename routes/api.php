@@ -18,7 +18,13 @@ Route::prefix('v1')->group(function () {
         Route::post('register', RegisterController::class)->name('register');
         Route::post('login', LoginAdminController::class)->name('login');
 
-        Route::middleware(['auth', 'role:logistik,ssc'])->group(function () {
+        Route::middleware(['auth'])->group(function () {
+            Route::get('users', [AdminController::class, 'index'])->name('users');
+            Route::put('users/{id}', [AdminController::class, 'update'])->name('users.update');
+
+        });
+
+        Route::middleware(['auth', 'role:logistik,ssc,superuser'])->group(function () {
             Route::get('current', [AdminController::class, 'show'])->name('current');
             Route::delete('logout', [AdminController::class, 'logout'])->name('logout');
         });
@@ -46,7 +52,8 @@ Route::prefix('v1')->group(function () {
 
     // Asset Routes
     Route::group(['prefix' => 'assets', 'as' => 'asset.', 'middleware' => ['auth', 'role:logistik,ssc,student']], function () {
-        Route::get('/', [AssetController::class, 'index'])->name('index');;
+        Route::get('/', [AssetController::class, 'index'])->name('index');
+        ;
         Route::post('/', [AssetController::class, 'store'])->middleware('role:logistik')->name('store');
         Route::get('{id}', [AssetController::class, 'show'])->where('id', '[0-9]+')->name('show');
         Route::put('{id}', [AssetController::class, 'update'])->where('id', '[0-9]+')->middleware('role:logistik')->name('update');
