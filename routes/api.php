@@ -34,13 +34,14 @@ Route::prefix('v1')->group(function () {
     });
 
     // Student Routes
+    Route::get('students/current', [StudentController::class, 'current'])->middleware('auth')->name('current');
+
     Route::group(['prefix' => 'students', 'as' => 'student.'], function () {
         Route::post('login', [StudentController::class, 'login'])->name('login');
 
         Route::get('/', [StudentController::class, 'index'])->name('index');
         Route::get('/{id}', [StudentController::class, 'show'])->name('show');
         Route::middleware(['auth', 'role:student'])->group(function () {
-            Route::get('current', [StudentController::class, 'current'])->name('current');
             Route::delete('logout', [StudentController::class, 'logout'])->name('logout');
         });
         Route::middleware(['auth'])->group(function () {
